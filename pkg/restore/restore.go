@@ -43,7 +43,12 @@ func NewRestore(ctx context.Context, cfg *config.RestoreConfig) (*Restore, error
 		return nil, fmt.Errorf("create storage failed: %w", err)
 	}
 
-	client, err := clients.NewMeta(cfg.MetaAddr)
+        client, err := clients.NewMeta(cfg.MetaAddr, clients.MetaSSLConfig{
+	        Enable:  cfg.MetaSSL.Enable,
+	        CAPath:  cfg.MetaSSL.CAPath,
+	        CertPath: cfg.MetaSSL.CertPath,
+	        KeyPath:  cfg.MetaSSL.KeyPath,
+        })
 	if err != nil {
 		return nil, fmt.Errorf("create meta client failed: %w", err)
 	}

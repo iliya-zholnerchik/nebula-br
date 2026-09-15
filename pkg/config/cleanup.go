@@ -19,9 +19,10 @@ func AddCleanupFlags(flags *pflag.FlagSet) {
 }
 
 type CleanupConfig struct {
-	MetaAddr   string
-	BackupName string
-	Backend    *pb.Backend // Backend is associated with the root uri
+        MetaAddr   string
+        BackupName string
+        Backend    *pb.Backend // Backend is associated with the root uri
+        MetaSSL    MetaSSLConfig
 }
 
 func (c *CleanupConfig) ParseFlags(flags *pflag.FlagSet) error {
@@ -34,9 +35,14 @@ func (c *CleanupConfig) ParseFlags(flags *pflag.FlagSet) error {
 	if err != nil {
 		return err
 	}
-	c.Backend, err = storage.ParseFromFlags(flags)
-	if err != nil {
-		return fmt.Errorf("parse storage flags failed: %w", err)
-	}
-	return nil
+        c.Backend, err = storage.ParseFromFlags(flags)
+        if err != nil {
+                return fmt.Errorf("parse storage flags failed: %w", err)
+        }
+
+        if err := c.MetaSSL.ParseFlags(flags); err != nil {
+                return err
+        }
+
+        return nil
 }
