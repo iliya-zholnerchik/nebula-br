@@ -30,12 +30,12 @@ func NewMeta(addrStr string, sslConfig MetaSSLConfig) (*NebulaMeta, error) {
 		return nil, err
 	}
 
-        m := &NebulaMeta{
-	        leaderAddr: addr,
-	        sslConfig:  sslConfig,
-        }
+    m := &NebulaMeta{
+	    leaderAddr: addr,
+	    sslConfig:  sslConfig,
+    }
 
-        if m.client, err = connect(addr, m.sslConfig); err != nil {
+    if m.client, err = connect(addr, m.sslConfig); err != nil {
 		return nil, err
 	}
 
@@ -52,7 +52,7 @@ func (m *NebulaMeta) reconnect(addr *nebula.HostAddr) error {
 	}
 	m.client.Close()
 
-        c, err := connect(addr, m.sslConfig)
+    c, err := connect(addr, m.sslConfig)
 	if err != nil {
 		return fmt.Errorf("connect to new meta client leader %s failed: %w",
 			utils.StringifyAddr(addr), err)
@@ -213,7 +213,7 @@ func (m *NebulaMeta) RestoreMeta(metaAddr *nebula.HostAddr, hostMap []*meta.Host
 
 	// meta startup time may be very long, so add retry for up to 10 times
 	for try := 1; try <= 10; try++ {
-                client, err := connect(metaAddr, m.sslConfig)
+        client, err := connect(metaAddr, m.sslConfig)
 		if err != nil {
 			numsec := 1 << try
 			if numsec > 32 {
@@ -243,7 +243,7 @@ func (m *NebulaMeta) RestoreMeta(metaAddr *nebula.HostAddr, hostMap []*meta.Host
 
 func (m *NebulaMeta) getMetaDirInfo(addr *nebula.HostAddr) (*nebula.DirInfo, error) {
 	log.WithField("addr", utils.StringifyAddr(addr)).Debug("Try to get dir info from meta service.")
-        c, err := connect(addr, m.sslConfig)
+    c, err := connect(addr, m.sslConfig)
 	if err != nil {
 		return nil, err
 	}

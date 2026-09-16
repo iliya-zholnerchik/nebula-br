@@ -21,10 +21,10 @@ func AddBackupFlags(flags *pflag.FlagSet) {
 	cobra.MarkFlagRequired(flags, FlagStorage)
 }
 type BackupConfig struct {
-        MetaAddr string
-        Spaces   []string
-        Backend  *pb.Backend // Backend is associated with the root uri
-        MetaSSL  MetaSSLConfig
+    MetaAddr string
+    Spaces   []string
+    Backend  *pb.Backend // Backend is associated with the root uri
+    MetaSSL  MetaSSLConfig
 }
 
 func (b *BackupConfig) ParseFlags(flags *pflag.FlagSet) error {
@@ -37,14 +37,14 @@ func (b *BackupConfig) ParseFlags(flags *pflag.FlagSet) error {
 	if err != nil {
 		return err
 	}
-        b.Backend, err = storage.ParseFromFlags(flags)
-        if err != nil {
-                return fmt.Errorf("parse storage flags failed: %w", err)
-        }
+    b.Backend, err = storage.ParseFromFlags(flags)
+    if err != nil {
+            return fmt.Errorf("parse storage flags failed: %w", err)
+    }
 
-        if err := b.MetaSSL.ParseFlags(flags); err != nil {
-                return err
-        }
+    if err := b.MetaSSL.ParseFlags(flags); err != nil {
+            return err
+    }
 
-        return nil
+    return nil
 }

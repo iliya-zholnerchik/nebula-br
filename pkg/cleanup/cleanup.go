@@ -31,12 +31,12 @@ func NewCleanup(ctx context.Context, cfg *config.CleanupConfig) (*Cleanup, error
 		return nil, fmt.Errorf("create storage for %s failed: %w", cfg.Backend.Uri(), err)
 	}
 
-        client, err := clients.NewMeta(cfg.MetaAddr, clients.MetaSSLConfig{
-                Enable:   cfg.MetaSSL.Enable,
-                CAPath:   cfg.MetaSSL.CAPath,
-                CertPath: cfg.MetaSSL.CertPath,
-                KeyPath:  cfg.MetaSSL.KeyPath,
-        })
+    client, err := clients.NewMeta(cfg.MetaAddr, clients.MetaSSLConfig{
+            Enable:   cfg.MetaSSL.Enable,
+            CAPath:   cfg.MetaSSL.CAPath,
+            CertPath: cfg.MetaSSL.CertPath,
+            KeyPath:  cfg.MetaSSL.KeyPath,
+    })
 	if err != nil {
 		return nil, fmt.Errorf("create meta client failed: %w", err)
 	}

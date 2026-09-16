@@ -36,12 +36,12 @@ func NewBackup(ctx context.Context, cfg *config.BackupConfig) (*Backup, error) {
 	}
 
 	var err error
-        b.meta, err = clients.NewMeta(cfg.MetaAddr, clients.MetaSSLConfig{
-                Enable:   cfg.MetaSSL.Enable,
-                CAPath:   cfg.MetaSSL.CAPath,
-                CertPath: cfg.MetaSSL.CertPath,
-                KeyPath:  cfg.MetaSSL.KeyPath,
-        })
+    b.meta, err = clients.NewMeta(cfg.MetaAddr, clients.MetaSSLConfig{
+            Enable:   cfg.MetaSSL.Enable,
+            CAPath:   cfg.MetaSSL.CAPath,
+            CertPath: cfg.MetaSSL.CertPath,
+            KeyPath:  cfg.MetaSSL.KeyPath,
+    })
 	if err != nil {
 		return nil, fmt.Errorf("create meta client failed: %w", err)
 	}
