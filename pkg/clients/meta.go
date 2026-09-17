@@ -11,22 +11,31 @@ import (
 	"github.com/vesoft-inc/nebula-go/v3/nebula/meta"
 )
 
+type MetaSSLConfig struct {
+	Enable   bool
+	CAPath   string
+	CertPath string
+	KeyPath  string
+}
+
 type NebulaMeta struct {
 	client     *meta.MetaServiceClient
 	leaderAddr *nebula.HostAddr
+	sslConfig  MetaSSLConfig
 }
 
-func NewMeta(addrStr string) (*NebulaMeta, error) {
+func NewMeta(addrStr string, sslConfig MetaSSLConfig) (*NebulaMeta, error) {
 	addr, err := utils.ParseAddr(addrStr)
 	if err != nil {
 		return nil, err
 	}
 
-	m := &NebulaMeta{
-		leaderAddr: addr,
-	}
+    m := &NebulaMeta{
+	    leaderAddr: addr,
+	    sslConfig:  sslConfig,
+    }
 
-	if m.client, err = connect(addr); err != nil {
+    if m.client, err = connect(addr, m.sslConfig); err != nil {
 		return nil, err
 	}
 
@@ -43,7 +52,7 @@ func (m *NebulaMeta) reconnect(addr *nebula.HostAddr) error {
 	}
 	m.client.Close()
 
-	c, err := connect(addr)
+    c, err := connect(addr, m.sslConfig)
 	if err != nil {
 		return fmt.Errorf("connect to new meta client leader %s failed: %w",
 			utils.StringifyAddr(addr), err)
@@ -204,7 +213,7 @@ func (m *NebulaMeta) RestoreMeta(metaAddr *nebula.HostAddr, hostMap []*meta.Host
 
 	// meta startup time may be very long, so add retry for up to 10 times
 	for try := 1; try <= 10; try++ {
-		client, err := connect(metaAddr)
+        client, err := connect(metaAddr, m.sslConfig)
 		if err != nil {
 			numsec := 1 << try
 			if numsec > 32 {
@@ -234,7 +243,7 @@ func (m *NebulaMeta) RestoreMeta(metaAddr *nebula.HostAddr, hostMap []*meta.Host
 
 func (m *NebulaMeta) getMetaDirInfo(addr *nebula.HostAddr) (*nebula.DirInfo, error) {
 	log.WithField("addr", utils.StringifyAddr(addr)).Debug("Try to get dir info from meta service.")
-	c, err := connect(addr)
+    c, err := connect(addr, m.sslConfig)
 	if err != nil {
 		return nil, err
 	}

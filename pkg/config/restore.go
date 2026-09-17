@@ -28,6 +28,7 @@ type RestoreConfig struct {
 	MetaAddr   string
 	BackupName string
 	Backend    *pb.Backend
+	MetaSSL    MetaSSLConfig
 }
 
 func (r *RestoreConfig) ParseFlags(flags *pflag.FlagSet) error {
@@ -37,6 +38,10 @@ func (r *RestoreConfig) ParseFlags(flags *pflag.FlagSet) error {
 		return err
 	}
 	r.BackupName, err = flags.GetString(flagBackupName)
+	if err != nil {
+		return err
+	}
+	err = r.MetaSSL.ParseFlags(flags)
 	if err != nil {
 		return err
 	}
